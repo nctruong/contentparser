@@ -2,20 +2,15 @@ require 'nokogiri'
 require 'open-uri'
 require 'uri'
 
-class IndexController < ApplicationController
-	skip_before_action :verify_authenticity_token
+class ProductsController < ApplicationController
+  skip_before_action :verify_authenticity_token
 
 	def index
-	end
-
-	def show
-		pageUrl = params[:url]
+		pageUrl = 'http://www.lazada.vn/dong-ho/'
 		uri = URI(pageUrl)
-		puts "*********************************host= " + uri.host
 		case uri.host
 		when "www.lazada.vn"
-			@name, @price, @details, @image = lazada_dongho(pageUrl)
-			#puts "***********************content: " + @content
+			@content = lazada_dongho(pageUrl)
 			
 		when "kienthuc.net.vn" || "www.kienthuc.net.vn"
 			@content = kienthuc(pageUrl)
@@ -45,41 +40,16 @@ class IndexController < ApplicationController
 		def lazada_dongho(pageUrl)
 			puts "**********************lazada_dongho()*********************"
 			doc = Nokogiri::HTML(open(pageUrl))
-			#body = doc.css('body')
-			#body = doc.css('div.catWrapper')
-			name 		= doc.css("div.product-info-name")
-			price		= doc.css("div.product-prices .product-price")
-			details  	= doc.css("div.catWrapper--collapse")
-			image		= doc.css("div.product-image-container img")
-			
+		  #body = doc.css('div.product-list .product-list-catalog .product-list-fashion .mobile-product-list .gridView')
+			#body = doc.css('div.gridView')
+			body = doc.css('ul.mobile-product-list')
+			#body = doc.css('div.product-list-fashion .mobile-product-list .gridView')
+			#body = doc.css('div.product-list-catalog .product-list-fashion .mobile-product-list .gridView')
 			#body.xpath('//@style').remove
 			#body.xpath('//@class').remove
 			#body.xpath('//@id').remove
 			
-			name.xpath('//@style').remove
-			name.xpath('//@class').remove
-			name.xpath('//@id').remove
-			
-			price.xpath('//@style').remove
-			price.xpath('//@class').remove
-			price.xpath('//@id').remove
-			
-			#doc.search('.description-detail-more-link').delete
-			#doc.search('.catTitle--opened').delete
-			
-			details.xpath('//@style').remove
-			details.xpath('//@class').remove
-			details.xpath('//@id').remove
-			
-			image.xpath('//@style').remove
-			image.xpath('//@class').remove
-			image.xpath('//@id').remove
-
-			name.inner_html
-			price.inner_html
-			details.inner_html
-			image.inner_html
-			return name, price, details, image
+			body.inner_html
 
 		end
 		
@@ -179,5 +149,4 @@ class IndexController < ApplicationController
 			body.xpath('//@id').remove
 			body.inner_html # apply the changes
 		end
-
 end

@@ -1,4 +1,10 @@
-<textarea name="editor1"><%= raw(@content) %></textarea>
+<textarea name="editor1">
+    <%= raw(@name) %>
+    <%= raw(@image) %>
+    <%= raw(@price) %>
+    <%= raw(@details) %>
+    <%= raw(@content) %>
+</textarea>
 <script>
     CKEDITOR.replace('editor1');
 </script>
